@@ -10,6 +10,16 @@ import Foundation
 
 class Webservice {
     
+    func downloadCurrenciesAsync(url: URL) async throws -> [CryptoCurrency] {
+         
+         let (data, response) = try await URLSession.shared.data(from: url)
+         
+         let currencies = try? JSONDecoder().decode([CryptoCurrency].self, from: data)
+         
+         return currencies ?? []
+     }
+    
+    /*
     func getData( url: URL, completion: @escaping (Result<[CryptoCurrency], DownloadError>) -> Void) {
         URLSession.shared.dataTask(with: url) { data, response, error in
             
@@ -34,11 +44,12 @@ class Webservice {
             
         }.resume()
     }
+    */
     
     enum DownloadError: Error {
-        case invalidURL        // Geçersiz URL
-        case emptyResponse     // Sunucudan dönen veri yok
-        case decodingFailed    // Veri ayrıştırılamadı
+        case invalidURL       
+        case emptyResponse
+        case decodingFailed
         
         var localizedDescription: String {
             switch self {

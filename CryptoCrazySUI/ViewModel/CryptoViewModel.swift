@@ -1,41 +1,66 @@
 //
 //  CryptoViewModel.swift
-//  CryptoCrazySUI
+//  CryptoViewModel
 //
-//  Created by Abdullah Karagöz on 20.11.2024.
+//  Created by Atil Samancioglu on 16.08.2021.
 //
 
 import Foundation
 
-
-class CryptoListViewModel : ObservableObject  {
+//Every property of this will be called on Main Thread
+@MainActor
+class CryptoListViewModel : ObservableObject {
     
     @Published var cryptoList = [CryptoViewModel]()
     
-    let webService = Webservice()
+    let webservice = Webservice()
     
+    
+    func downloadCryptosAsync(url : URL) async {
+        do {
+        let cryptos = try await webservice.downloadCurrenciesAsync(url: url)
+            DispatchQueue.main.async {
+                self.cryptoList = cryptos.map(CryptoViewModel.init)
+            }
+        } catch {
+            print(error)
+        }
+    }
+     
+    
+    /*
+    func downloadCryptosContinuation(url : URL) async {
+        do {
+            let cryptos = try await webservice.downloadCurrenciesContinuation(url: url)
+            self.cryptoList = cryptos.map(CryptoViewModel.init)
+            /*
+            DispatchQueue.main.async {
+                self.cryptoList = cryptos.map(CryptoViewModel.init)
+            }
+             */
+        } catch {
+            print(error)
+        }
+    }
+    */
+    
+    /*
     func downloadCryptos(url : URL) {
-        
-        webService.getData(url: url) { result in
-            
+        webservice.downloadCurrencies(url: url, completion: { result in
             switch result {
             case .failure(let error):
                 print(error)
-                
             case .success(let cryptos):
-                DispatchQueue.main.async {
-                    self.cryptoList = cryptos.map(CryptoViewModel.init)
+                if let cryptos = cryptos {
+                    DispatchQueue.main.async {
+                        self.cryptoList = cryptos.map(CryptoViewModel.init)
+                    }
                 }
-               
-                
             }
-        }
-        
+        })
     }
-    
-    
+     */
 }
-
 
 struct CryptoViewModel {
     
