@@ -24,11 +24,22 @@ struct MainView: View {
                         .font(.subheadline)
                         .frame(maxWidth: .infinity, alignment: .leading)
                 }
-            }.navigationTitle(Text("Crypto App"))
-        }.task {
-            await cryptoListViewModel.downloadCryptosContinuation(url: URL(string: "https://raw.githubusercontent.com/atilsamancioglu/K21-JSONDataSet/refs/heads/master/crypto.json")!)
+            }.toolbar(content: {
+                Button {
+                    Task.init {
+                        await cryptoListViewModel.downloadCryptosContinuation(url: URL(string: "https://raw.githubusercontent.com/atilsamancioglu/K21-JSONDataSet/refs/heads/master/crypto.json")!)
+                    }
+                } label: {
+                    Text("Yenile")
+                }
+
+            })
             
-            //await   cryptoListViewModel.downloadCryptosAsync(url: URL(string: "https://raw.githubusercontent.com/atilsamancioglu/K21-JSONDataSet/refs/heads/master/crypto.json")!)
+            
+            .navigationTitle(Text("Crypto App"))
+        }.task {
+            
+            await cryptoListViewModel.downloadCryptosContinuation(url: URL(string: "https://raw.githubusercontent.com/atilsamancioglu/K21-JSONDataSet/refs/heads/master/crypto.json")!)
         }
         
         /*

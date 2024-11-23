@@ -1,9 +1,3 @@
-//
-//  CryptoViewModel.swift
-//  CryptoViewModel
-//
-//  Created by Atil Samancioglu on 16.08.2021.
-//
 
 import Foundation
 
@@ -17,9 +11,9 @@ class CryptoListViewModel : ObservableObject {
     func downloadCryptosContinuation(url : URL) async {
         do {
             let cryptos = try await webservice.downloadCurrenciesContinuation(url: url)
-            DispatchQueue.main.async {
+         //   DispatchQueue.main.async {
                 self.cryptoList = cryptos.map(CryptoViewModel.init)
-            }
+           // }
         } catch {
             print(error)
         }
