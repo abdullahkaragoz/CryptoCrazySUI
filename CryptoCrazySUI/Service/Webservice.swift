@@ -10,16 +10,33 @@ import Foundation
 
 class Webservice {
     
+    func downloadCurrenciesContinuation(url: URL) async throws -> [CryptoCurrency] {
+
+        try await withCheckedContinuation { continuation in
+            getData(url: url) { result in
+                switch result {
+                  case .success(let cryptos):
+                    continuation.resume(returning: cryptos)
+                case .failure(let error):
+                    print("error: \(error.localizedDescription)")
+                }
+            }
+        }
+        
+    }
+    
+    /*
     func downloadCurrenciesAsync(url: URL) async throws -> [CryptoCurrency] {
          
-         let (data, response) = try await URLSession.shared.data(from: url)
+        let (data, _) = try await URLSession.shared.data(from: url)
          
          let currencies = try? JSONDecoder().decode([CryptoCurrency].self, from: data)
          
          return currencies ?? []
      }
+    */
     
-    /*
+    
     func getData( url: URL, completion: @escaping (Result<[CryptoCurrency], DownloadError>) -> Void) {
         URLSession.shared.dataTask(with: url) { data, response, error in
             
@@ -44,7 +61,7 @@ class Webservice {
             
         }.resume()
     }
-    */
+    
     
     enum DownloadError: Error {
         case invalidURL       
